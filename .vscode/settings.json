@@ -11,5 +11,13 @@
 	"python.analysis.extraPaths": [".vscode/Pico-W-Stub"],
 	"explorerExclude.backup": {},
 	"editor.tabSize": 2,
-	"cmake.configureOnOpen": true
+	"cmake.configureOnOpen": true,
+	"files.exclude": {
+		"**/.git": true,
+		"**/.svn": true,
+		"**/.hg": true,
+		"**/CVS": true,
+		"**/.DS_Store": true,
+		"**/Thumbs.db": false
+	}
 }
