@@ -59,6 +59,13 @@ htmlContent = '''
 				font-weight: 700;
 				font-size: large;
 			}
+			.pwmButtons {
+				display: flex;
+				flex-direction: column;
+				width: 75%;
+				margin: 0 auto;
+				gap: 12px;
+			}
 		</style>
 		<script>
 			const getValById = (elementId) => {
@@ -79,6 +86,14 @@ htmlContent = '''
 					}),
 				});
 			};
+			const pwmStatus = () => {
+				fetch('/api/pwm', {
+					method: 'POST',
+					body: JSON.stringify({
+						command: 'pwmLedStatus',
+					}),
+				}).then(() => window.location.reload());
+			};
 		</script>
 	</head>
 	<body>
@@ -98,6 +113,7 @@ htmlContent = '''
 						name="pwmRed"
 						min="0"
 						max="255"
+						value="{pwmRedValue}"
 						class="rangeInput"
 					/>
 				</div>
@@ -109,6 +125,7 @@ htmlContent = '''
 						name="pwmGreen"
 						min="0"
 						max="255"
+						value="{pwmGreenValue}"
 						class="rangeInput"
 					/>
 				</div>
@@ -120,11 +137,15 @@ htmlContent = '''
 						name="pwmBlue"
 						min="0"
 						max="255"
+						value="{pwmBlueValue}"
 						class="rangeInput"
 					/>
 				</div>
-				<div class="center">
+				<div class="pwmButtons">
 					<button class="customButton" onclick="pwmSave()">Save</button>
+					<button class="customButton" onclick="pwmStatus()">
+						{pwmStatus}
+					</button>
 				</div>
 			</div>
 

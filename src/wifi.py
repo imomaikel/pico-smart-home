@@ -1,8 +1,9 @@
 # Connect Pi Pico with the network
+from src.led.pwmLed import pwmLedSetColor, pwmDisable, pwmEnable
 from src.config import WIFI_SSID, WIFI_PASSWD
-from src.led.pwmLed import pwmLedSetColor
 from src.html import htmlContent
 from machine import Pin
+from src.db import db
 import network
 import socket
 import json
@@ -53,12 +54,30 @@ def startServer():
             if command == 'pwmLed':
                 r, g, b = body['red'], body['green'], body['blue']
                 pwmLedSetColor(int(r), int(g), int(b))
+            elif command == 'pwmLedStatus':
+                currentStatus = str(db('GET', 'pwmStatus'))
+                if currentStatus == '1':
+                    pwmDisable()
+                else:
+                    pwmEnable()
 
         except:
             pass
 
+        pwmRedValue = str(db('GET', 'pwmRedValue'))
+        pwmGreenValue = str(db('GET', 'pwmGreenValue'))
+        pwmBlueValue = str(db('GET', 'pwmBlueValue'))
+        pwmStatus = str(db('GET', 'pwmStatus'))
+
+        html = str(htmlContent)
+
+        html = html.replace('{pwmRedValue}', pwmRedValue)
+        html = html.replace('{pwmGreenValue}', pwmGreenValue)
+        html = html.replace('{pwmBlueValue}', pwmBlueValue)
+        html = html.replace('{pwmStatus}', 'ON' if pwmStatus == '1' else 'OFF')
+
         c.send('HTTP/1.0 200 OK\n')
         c.send('Content-Type: text/html\n')
         c.send('\n')
-        c.send(htmlContent)
+        c.send(html)
         c.close()
